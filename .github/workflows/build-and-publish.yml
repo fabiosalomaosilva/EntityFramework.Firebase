@@ -61,6 +61,7 @@ jobs:
       with:
         name: test-results
         path: ./coverage
+        if-no-files-found: error
 
   create-nuget:
     runs-on: ubuntu-latest
