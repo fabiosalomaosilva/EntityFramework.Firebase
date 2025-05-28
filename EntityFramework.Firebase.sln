@@ -1,0 +1,33 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31912.202
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EfCore.FirestoreProvider", "src\EfCore.FirestoreProvider\EfCore.FirestoreProvider.csproj", "{D1A1B3A4-5E5C-4D7B-8D6D-3B9B5B9A5D5C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EfCore.FirestoreProvider.Sample", "src\EfCore.FirestoreProvider.Sample\EfCore.FirestoreProvider.Sample.csproj", "{C2B2C3B4-6E6D-4E7B-8E7E-4C9C6C9B6E6D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EfCore.FirestoreProvider.Tests", "tests\EfCore.FirestoreProvider.Tests\EfCore.FirestoreProvider.Tests.csproj", "{E3B3C4B5-7F7E-4F8B-8F8F-5D0D7D0B7F7E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D1A1B3A4-5E5C-4D7B-8D6D-3B9B5B9A5D5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1A1B3A4-5E5C-4D7B-8D6D-3B9B5B9A5D5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1A1B3A4-5E5C-4D7B-8D6D-3B9B5B9A5D5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1A1B3A4-5E5C-4D7B-8D6D-3B9B5B9A5D5C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2B2C3B4-6E6D-4E7B-8E7E-4C9C6C9B6E6D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2B2C3B4-6E6D-4E7B-8E7E-4C9C6C9B6E6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2B2C3B4-6E6D-4E7B-8E7E-4C9C6C9B6E6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2B2C3B4-6E6D-4E7B-8E7E-4C9C6C9B6E6D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E3B3C4B5-7F7E-4F8B-8F8F-5D0D7D0B7F7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E3B3C4B5-7F7E-4F8B-8F8F-5D0D7D0B7F7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E3B3C4B5-7F7E-4F8B-8F8F-5D0D7D0B7F7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E3B3C4B5-7F7E-4F8B-8F8F-5D0D7D0B7F7E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

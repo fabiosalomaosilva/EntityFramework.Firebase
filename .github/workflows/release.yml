@@ -1,0 +1,75 @@
+name: Release
+
+on:
+  release:
+    types: [published]
+
+env:
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+  DOTNET_NOLOGO: true
+  NuGetDirectory: ${{ github.workspace}}/nuget
+
+defaults:
+  run:
+    shell: pwsh
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    name: Deploy Release to NuGet
+    environment: production
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Extract version from tag
+      id: get_version
+      run: |
+        $tag = "${{ github.event.release.tag_name }}"
+        $version = $tag -replace '^v', ''
+        echo "version=$version" >> $env:GITHUB_OUTPUT
+        echo "Version: $version"
+
+    - name: Restore dependencies
+      run: dotnet restore EntityFramework.Firebase.sln
+
+    - name: Build
+      run: dotnet build EntityFramework.Firebase.sln --configuration Release --no-restore
+
+    - name: Run tests
+      run: dotnet test EntityFramework.Firebase.sln --configuration Release --no-build --verbosity normal
+
+    - name: Create NuGet package
+      run: |
+        dotnet pack src/EfCore.FirestoreProvider/EfCore.FirestoreProvider.csproj `
+          --configuration Release `
+          --no-build `
+          --output ${{ env.NuGetDirectory }} `
+          /p:PackageVersion=${{ steps.get_version.outputs.version }} `
+          /p:AssemblyVersion=${{ steps.get_version.outputs.version }} `
+          /p:FileVersion=${{ steps.get_version.outputs.version }} `
+          /p:InformationalVersion=${{ steps.get_version.outputs.version }}
+
+    - name: Publish NuGet package
+      run: |
+        foreach($file in (Get-ChildItem "${{ env.NuGetDirectory }}" -Recurse -Include *.nupkg)) {
+            Write-Host "Publishing $($file.FullName)"
+            dotnet nuget push $file --api-key "${{ secrets.NUGET_APIKEY }}" --source https://api.nuget.org/v3/index.json --skip-duplicate
+        }
+
+    - name: Upload package to release
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ github.event.release.upload_url }}
+        asset_path: ${{ env.NuGetDirectory }}/EfCore.FirestoreProvider.${{ steps.get_version.outputs.version }}.nupkg
+        asset_name: EfCore.FirestoreProvider.${{ steps.get_version.outputs.version }}.nupkg
+        asset_content_type: application/zip

@@ -1,0 +1,51 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>EfCore.FirestoreProvider</RootNamespace>
+    <AssemblyName>EfCore.FirestoreProvider</AssemblyName>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+
+    <!-- Package metadata -->
+    <PackageId>EfCore.FirestoreProvider</PackageId>
+    <Title>Entity Framework Core Provider for Google Cloud Firestore</Title>
+    <Description>A Entity Framework Core provider for Google Cloud Firestore, enabling developers to use EF Core with Firestore as the database backend.</Description>
+    <PackageTags>EntityFramework;EFCore;Firestore;Google;Cloud;NoSQL;Database</PackageTags>
+    <PackageProjectUrl>https://github.com/fabiosalomaosilva/EntityFramework.Firebase</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/fabiosalomaosilva/EntityFramework.Firebase</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Authors>Fabio Salomão Silva</Authors>
+    <Company>Fabio Salomão Silva</Company>
+    <Copyright>Copyright © 2025 Fabio Salomão Silva</Copyright>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageReleaseNotes>See https://github.com/fabiosalomaosilva/EntityFramework.Firebase/releases for release notes.</PackageReleaseNotes>
+
+    <!-- Include symbols -->
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+
+    <!-- Source link -->
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <DebugType>embedded</DebugType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.0" />
+    <PackageReference Include="Google.Cloud.Firestore" Version="3.9.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
+
+    <!-- Source Link support -->
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Include README in package -->
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+</Project>

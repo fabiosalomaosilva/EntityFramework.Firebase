@@ -1,0 +1,169 @@
+name: Build, Test and Publish
+
+on:
+  push:
+    branches: [ main, develop ]
+    tags: [ 'v*' ]
+  pull_request:
+    branches: [ main, develop ]
+
+env:
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+  DOTNET_NOLOGO: true
+  NuGetDirectory: ${{ github.workspace}}/nuget
+
+defaults:
+  run:
+    shell: pwsh
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    name: Build and Test
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0 # Necessário para GitVersion
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Cache dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.nuget/packages
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+        restore-keys: |
+          ${{ runner.os }}-nuget-
+
+    - name: Restore dependencies
+      run: dotnet restore EntityFramework.Firebase.sln
+
+    - name: Build
+      run: dotnet build EntityFramework.Firebase.sln --configuration Release --no-restore
+
+    - name: Test
+      run: dotnet test EntityFramework.Firebase.sln --configuration Release --no-build --verbosity normal --collect:"XPlat Code Coverage" --results-directory ./coverage
+
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      if: success()
+      with:
+        directory: ./coverage
+        fail_ci_if_error: false
+
+    - name: Upload test results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: test-results
+        path: ./coverage
+
+  create-nuget:
+    runs-on: ubuntu-latest
+    name: Create NuGet packages
+    needs: build-and-test
+    if: github.event_name == 'push'
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Install GitVersion
+      uses: gittools/actions/gitversion/setup@v0.10.2
+      with:
+        versionSpec: '5.x'
+
+    - name: Determine Version
+      uses: gittools/actions/gitversion/execute@v0.10.2
+      id: gitversion
+      with:
+        useConfigFile: true
+        configFilePath: GitVersion.yml
+
+    - name: Display GitVersion outputs
+      run: |
+        echo "Version: ${{ steps.gitversion.outputs.semVer }}"
+        echo "AssemblyVersion: ${{ steps.gitversion.outputs.assemblySemVer }}"
+        echo "FileVersion: ${{ steps.gitversion.outputs.assemblySemFileVer }}"
+        echo "InformationalVersion: ${{ steps.gitversion.outputs.informationalVersion }}"
+
+    - name: Restore dependencies
+      run: dotnet restore EntityFramework.Firebase.sln
+
+    - name: Build
+      run: dotnet build EntityFramework.Firebase.sln --configuration Release --no-restore
+
+    - name: Create NuGet package
+      run: |
+        dotnet pack src/EfCore.FirestoreProvider/EfCore.FirestoreProvider.csproj `
+          --configuration Release `
+          --no-build `
+          --output ${{ env.NuGetDirectory }} `
+          /p:PackageVersion=${{ steps.gitversion.outputs.nuGetVersionV2 }} `
+          /p:AssemblyVersion=${{ steps.gitversion.outputs.assemblySemVer }} `
+          /p:FileVersion=${{ steps.gitversion.outputs.assemblySemFileVer }} `
+          /p:InformationalVersion=${{ steps.gitversion.outputs.informationalVersion }}
+
+    - name: Upload NuGet package
+      uses: actions/upload-artifact@v3
+      with:
+        name: nuget-packages
+        if-no-files-found: error
+        retention-days: 7
+        path: ${{ env.NuGetDirectory }}/*.nupkg
+
+  validate-nuget:
+    runs-on: ubuntu-latest
+    name: Validate NuGet package
+    needs: create-nuget
+
+    steps:
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+
+    - uses: actions/download-artifact@v3
+      with:
+        name: nuget-packages
+        path: ${{ env.NuGetDirectory }}
+
+    - name: Install nuget validator
+      run: dotnet tool update Meziantou.Framework.NuGetPackageValidation.Tool --global
+
+    - name: Validate package
+      run: meziantou.validate-nuget-package (Get-ChildItem "${{ env.NuGetDirectory }}/*.nupkg")
+
+  deploy-nuget:
+    runs-on: ubuntu-latest
+    name: Deploy to NuGet
+    needs: [create-nuget, validate-nuget]
+    if: startsWith(github.ref, 'refs/tags/v')
+    environment: production
+
+    steps:
+    - uses: actions/download-artifact@v3
+      with:
+        name: nuget-packages
+        path: ${{ env.NuGetDirectory }}
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Publish NuGet package
+      run: |
+        foreach($file in (Get-ChildItem "${{ env.NuGetDirectory }}" -Recurse -Include *.nupkg)) {
+            dotnet nuget push $file --api-key "${{ secrets.NUGET_APIKEY }}" --source https://api.nuget.org/v3/index.json --skip-duplicate
+        }

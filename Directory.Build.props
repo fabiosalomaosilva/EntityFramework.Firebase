@@ -1,0 +1,47 @@
+<Project>
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningsAsErrors />
+    <WarningsNotAsErrors />
+
+    <!-- Common package properties -->
+    <Authors>Fabio Salomão Silva</Authors>
+    <Company>Fabio Salomão Silva</Company>
+    <Copyright>Copyright © 2025 Fabio Salomão Silva</Copyright>
+    <Product>EntityFramework.Firebase</Product>
+
+    <!-- Repository information -->
+    <RepositoryUrl>https://github.com/fabiosalomaosilva/EntityFramework.Firebase</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryBranch>main</RepositoryBranch>
+
+    <!-- Source link configuration -->
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <DebugType>embedded</DebugType>
+
+    <!-- Deterministic builds -->
+    <ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
+
+    <!-- Code analysis -->
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <AnalysisLevel>latest</AnalysisLevel>
+    <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)stylecop.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+
+  <!-- Global package references -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" Condition="'$(IsPackable)' == 'true'" />
+  </ItemGroup>
+
+  <!-- Global using statements -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
+    <Using Include="System" />
+    <Using Include="System.Collections.Generic" />
+    <Using Include="System.Linq" />
+    <Using Include="System.Threading.Tasks" />
+  </ItemGroup>
+</Project>
