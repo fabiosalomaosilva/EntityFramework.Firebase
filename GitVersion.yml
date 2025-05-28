@@ -1,20 +1,19 @@
 mode: Mainline
+
 branches:
     main:
         regex: ^master$|^main$
-        mode: ContinuousDelivery
         tag: ""
         increment: Patch
         prevent-increment-of-merged-branch-version: true
         track-merge-target: false
         source-branches: ["develop", "feature", "support", "hotfix"]
-        tracks-release-branches: false
         is-release-branch: true
         is-mainline: true
         pre-release-weight: 55000
+
     develop:
         regex: ^dev(elop)?(ment)?$
-        mode: ContinuousDeployment
         tag: "alpha"
         increment: Minor
         prevent-increment-of-merged-branch-version: false
@@ -24,9 +23,9 @@ branches:
         is-release-branch: false
         is-mainline: false
         pre-release-weight: 0
+
     feature:
         regex: ^features?[/-]
-        mode: ContinuousDeployment
         tag: "beta"
         increment: Minor
         prevent-increment-of-merged-branch-version: false
@@ -37,9 +36,9 @@ branches:
         is-release-branch: false
         is-mainline: false
         pre-release-weight: 30000
+
     release:
         regex: ^releases?[/-]
-        mode: ContinuousDelivery
         tag: "rc"
         increment: None
         prevent-increment-of-merged-branch-version: true
@@ -49,9 +48,9 @@ branches:
         is-release-branch: true
         is-mainline: false
         pre-release-weight: 1000
+
     hotfix:
         regex: ^hotfix(es)?[/-]
-        mode: ContinuousDeployment
         tag: "hotfix"
         increment: Patch
         prevent-increment-of-merged-branch-version: false
@@ -61,9 +60,9 @@ branches:
         is-release-branch: false
         is-mainline: false
         pre-release-weight: 4000
+
     support:
         regex: ^support[/-]
-        mode: ContinuousDelivery
         tag: ""
         increment: Patch
         prevent-increment-of-merged-branch-version: true
@@ -73,17 +72,22 @@ branches:
         is-release-branch: false
         is-mainline: true
         pre-release-weight: 55000
+
 ignore:
     sha: []
+
 continuous-delivery-fallback-tag: "ci"
+
 major-version-bump-message: '\+semver:\s?(breaking|major)'
 minor-version-bump-message: '\+semver:\s?(feature|minor)'
 patch-version-bump-message: '\+semver:\s?(fix|patch)'
 no-bump-message: '\+semver:\s?(none|skip)'
+
 legacy-semver-padding: 4
 build-metadata-padding: 4
 commits-since-version-source-padding: 4
 tag-prefix: "v"
 semantic-version-format: Strict
 merge-message-formats: {}
+
 update-build-number: true
