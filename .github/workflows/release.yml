@@ -67,7 +67,7 @@ jobs:
     - name: Upload package to release
       uses: actions/upload-release-asset@v1
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GHB_TOKEN }}
       with:
         upload_url: ${{ github.event.release.upload_url }}
         asset_path: ${{ env.NuGetDirectory }}/EfCore.FirestoreProvider.${{ steps.get_version.outputs.version }}.nupkg
