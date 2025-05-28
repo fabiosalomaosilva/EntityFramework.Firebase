@@ -48,6 +48,12 @@ jobs:
     - name: Test
       run: dotnet test EntityFramework.Firebase.sln --configuration Release --no-build --verbosity normal --collect:"XPlat Code Coverage" --results-directory ./coverage
 
+    - name: Upload Build Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: build-artifact
+        path: path/to/artifacts
+
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3
       if: success()
