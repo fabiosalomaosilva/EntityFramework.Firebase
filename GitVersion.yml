@@ -87,7 +87,6 @@ legacy-semver-padding: 4
 build-metadata-padding: 4
 commits-since-version-source-padding: 4
 tag-prefix: "v"
-semantic-version-format: Strict
 merge-message-formats: {}
 
 update-build-number: true
