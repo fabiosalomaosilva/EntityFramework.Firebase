@@ -51,10 +51,6 @@
   </ItemGroup>
 
     <ItemGroup>
-    <Content Include="$(OutputPath)$(AssemblyName).xml" Pack="true" PackagePath="lib\net8.0\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <None Update="Assets\efirebase.png">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
