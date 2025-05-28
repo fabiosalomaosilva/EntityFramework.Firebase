@@ -30,6 +30,7 @@
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <DebugType>embedded</DebugType>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -40,7 +41,7 @@
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
 
     <!-- Source Link support -->
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All"/>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>
@@ -48,4 +49,17 @@
     <None Include="..\..\README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
+    <ItemGroup>
+    <Content Include="$(OutputPath)$(AssemblyName).xml" Pack="true" PackagePath="lib\net8.0\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="Assets\efirebase.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
+	<PropertyGroup>
+		<PackageIcon>efirebase.png</PackageIcon>
+	</PropertyGroup>
 </Project>
